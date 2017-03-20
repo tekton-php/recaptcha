@@ -1,0 +1,17 @@
+{
+  "name": "tekton/recaptcha",
+  "type": "library",
+  "license": "MIT",
+  "description": "A simple recaptcha service provider for Tekton.",
+  "homepage": "https://gitlab.com/tekton/recaptcha",
+  "autoload": {
+    "psr-4": {
+      "Tekton\\Recaptcha\\": "src/"
+    }
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.0.0",
+    "tekton/support": "^1.0.0"
+  }
+}
