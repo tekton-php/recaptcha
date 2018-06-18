@@ -1,13 +1,20 @@
 <?php namespace Tekton\Recaptcha;
 
-class RecaptchaManager {
+use Tekton\Support\Repository;
+use Tekton\API\ApiManager;
 
-    function __construct() {
-        $this->config = app('config');
-        $this->api = app('api');
+class RecaptchaManager
+{
+    protected $config;
+
+    function __construct($config, ApiManager $api)
+    {
+        $this->config = new Repository($config);
+        $this->api = $api;
     }
 
-    function response(array $data = []) {
+    function response(array $data = [])
+    {
         if (empty($data)) {
             if (isset($_POST['g-recaptcha-response'])) {
                 return $_POST['g-recaptcha-response'];
@@ -20,12 +27,12 @@ class RecaptchaManager {
         return (isset($data['g-recaptcha-response'])) ? $data['g-recaptcha-response'] : null;
     }
 
-    function validate($ip, $response) {
-
+    function validate($ip, $response)
+    {
         // Make sure Captcha is correct
         $result = $this->api->post('https://www.google.com/recaptcha/api/siteverify', array(
             'form_params' => array(
-                'secret' => $this->config->get('recaptcha.secret_key'),
+                'secret' => $this->config->get('secret_key'),
                 'response' => $response,
                 'remoteip' => $ip,
             ),
@@ -42,16 +49,19 @@ class RecaptchaManager {
         }
     }
 
-    function widget($classes = []) {
+    function widget($classes = [])
+    {
         $classes = array_merge(['g-recaptcha'], $classes);
-        return '<div class="'.implode(' ', $classes).'" data-sitekey="'.$this->config->get('recaptcha.public_key').'"></div>';
+        return '<div class="'.implode(' ', $classes).'" data-sitekey="'.$this->config->get('public_key').'"></div>';
     }
 
-    function display($classes = []) {
+    function display($classes = [])
+    {
         echo $this->widget($classes);
     }
 
-    function script() {
+    function script()
+    {
         return 'https://www.google.com/recaptcha/api.js';
     }
 }
